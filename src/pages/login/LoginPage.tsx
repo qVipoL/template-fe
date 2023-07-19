@@ -52,7 +52,7 @@ export const LoginPage = () => {
       });
     },
     onSuccess({ data }) {
-      authContext.authUser(data.user, data.token);
+      authContext.authUser(data);
       navigate(Routes.Home);
     },
   });

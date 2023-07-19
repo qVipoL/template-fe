@@ -13,20 +13,14 @@ type RegisterRequestBody = {
   phone?: string;
 };
 
-type LoginResponseData = {
-  token: string;
-  user: User;
-};
+type LoginResponseData = User;
 
-type GetCurrentUserResponseData = {
-  user: User;
-};
+type GetCurrentUserResponseData = User;
 
 const AuthEndpoints = {
   Login: "/users/login",
   Register: "/users/registerUser",
-  CurrentUser: "/users/currentUser",
-  UpdateConfig: "/users/updateUserSettings",
+  CurrentUser: "/users/user",
 };
 
 export const login = (body: LoginRequestBody) => {
@@ -39,21 +33,4 @@ export const register = (body: RegisterRequestBody) => {
 
 export const getCurrentUser = () => {
   return API.get<GetCurrentUserResponseData>(AuthEndpoints.CurrentUser);
-};
-
-type UpdateUserConfig = {
-  settings: {
-    answerVariant: number;
-    timeExtention: boolean;
-    includeLaw: boolean;
-    answerDisplayEnd: boolean;
-    timerVariant: number;
-    arrowVariant: number;
-    questionsFromLaws: string[];
-    totalQuestions: number;
-  };
-};
-
-export const updateUserConfig = (body: UpdateUserConfig) => {
-  return API.post(AuthEndpoints.UpdateConfig, body);
 };

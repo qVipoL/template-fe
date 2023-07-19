@@ -9,7 +9,7 @@ export type AuthContextType = {
 };
 
 type AuthContextActionTypes = {
-  authUser: (user: User, token: string) => void;
+  authUser: (user: User) => void;
   logoutUser: () => void;
 };
 
@@ -25,26 +25,23 @@ const AuthContext = createContext(defaultValue);
 const AuthContextProvider = AuthContext.Provider;
 
 export const withAuthContext = (component: () => React.ReactNode) => {
-  const accessToken = localStorage.getItem("accessToken");
   const [auth, setAuth] = useState<AuthContextType>({
     user: null,
     isAuth: false,
   });
 
   const { data, isError } = useQuery(["GetCurrentUser"], getCurrentUser, {
-    enabled: Boolean(accessToken) && !auth.isAuth,
+    enabled: !auth.isAuth,
   });
 
-  if (accessToken && !auth.isAuth && !isError && data?.data) {
+  if (!auth.isAuth && !isError && data?.data) {
     setAuth({
-      user: data.data.user,
+      user: data.data,
       isAuth: true,
     });
   }
 
-  const authUser = useCallback((user: User, token: string) => {
-    localStorage.setItem("accessToken", token);
-
+  const authUser = useCallback((user: User) => {
     setAuth({
       user,
       isAuth: true,
@@ -52,7 +49,6 @@ export const withAuthContext = (component: () => React.ReactNode) => {
   }, []);
 
   const logoutUser = useCallback(() => {
-    localStorage.removeItem("accessToken");
     setAuth({
       user: null,
       isAuth: false,

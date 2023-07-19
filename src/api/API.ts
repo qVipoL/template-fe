@@ -9,32 +9,12 @@ const apiConfig = {
 const axiosConfig: AxiosRequestConfig = {
   baseURL: apiConfig.BASE_URL,
   timeout: apiConfig.TIMEOUT,
-  withCredentials: false,
+  withCredentials: true,
   headers: {
     Accept: "application/json",
   },
 };
 
-axios.defaults.withCredentials = false;
+axios.defaults.withCredentials = true;
 
 export const API = axios.create(axiosConfig);
-
-API.interceptors.request.use((config) => {
-  config.headers!!.Authorization = `Bearer ${localStorage.getItem(
-    "accessToken"
-  )}`;
-
-  return config;
-});
-
-API.interceptors.response.use(
-  (config) => config,
-  async (error) => {
-    console.warn(
-      `Server responded with: ${error?.code} | data: )}`,
-      error?.response?.data
-    );
-
-    throw error?.response?.data || error;
-  }
-);
